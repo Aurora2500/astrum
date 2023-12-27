@@ -54,7 +54,7 @@ float noise (vec2 st, float wrap) {
 
 
 float fbm (in vec2 p, in float wrap) {
-	const int OCTAVES = 5;
+	const int OCTAVES = 100;
 	// Initial values
 	float value = 0.0;
 	float amplitude = .5;

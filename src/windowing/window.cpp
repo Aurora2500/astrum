@@ -21,6 +21,10 @@ Window::Window(const char *title) : m_is_fullscreen(false), m_width(1600), m_hei
 		exit(1);
 	}
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 }
 
@@ -38,7 +42,7 @@ void Window::clear()
 	float b = 117.0f / 255.0 / 3.0;
 	glViewport(0, 0, m_width, m_height);
 	glClearColor(r, g, b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::update()
@@ -54,6 +58,11 @@ int Window::width() const
 int Window::height() const
 {
 	return m_height;
+}
+
+float Window::aspect() const
+{
+	return static_cast<float>(m_width) / static_cast<float>(m_height);
 }
 
 void Window::handle_events(SDL_Event &event)

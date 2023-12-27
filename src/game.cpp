@@ -26,16 +26,8 @@ void Game::run()
 	bool running = true;
 
 	Camera cam;
-
-	glEnable(GL_CULL_FACE);
-
 	Shader &shader = m_assets.get_shader("planet");
 	shader.use();
-
-	int viewLoc = glGetUniformLocation(shader.id(), "view");
-
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)window.width() / (float)window.height(), 0.1f, 100.0f);
-
 	Mesh mesh = create_sphere(30, 30);
 	mesh.make_buffers();
 
@@ -48,39 +40,11 @@ void Game::run()
 			if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
 				running = false;
 			window.handle_events(event);
-
-			if (event.type == SDL_MOUSEBUTTONDOWN)
-			{
-				mouse_down = true;
-			}
-
-			if (event.type == SDL_MOUSEBUTTONUP)
-			{
-				mouse_down = false;
-			}
-
-			if (event.type == SDL_MOUSEMOTION && mouse_down)
-			{
-				cam.yaw() += event.motion.xrel * 0.01f;
-				cam.pitch() += event.motion.yrel * 0.01f;
-
-				float max_pitch = M_PI_2 - 0.01f;
-				cam.pitch() = std::clamp(cam.pitch(), -max_pitch, max_pitch);
-
-				cam.yaw() = fmod(cam.yaw(), 2 * M_PI);
-			}
-
-			if (event.type == SDL_MOUSEWHEEL)
-			{
-				cam.distance() -= event.wheel.y * 0.1f;
-				cam.distance() = std::clamp(cam.distance(), 1.0f, 100.0f);
-			}
+			cam.update(event, mouse_down);
 		}
 		window.clear();
-		glm::mat4 view = cam.get_view_matrix();
-		glm::mat4 pv = projection * view;
-		// set the uniform
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(pv));
+		glm::mat4 view = cam.get_view_matrix(window.aspect());
+		shader.set_uniform("view", view);
 		mesh.draw();
 		window.update();
 	}

@@ -1,7 +1,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "shaders.hpp"
+#include "rendering/shaders.hpp"
 
 class AssetManager
 {

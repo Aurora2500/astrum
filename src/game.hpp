@@ -1,5 +1,4 @@
 #include "assets/asset_manager.hpp"
-#include "assets/shaders.hpp"
 
 class Game
 {

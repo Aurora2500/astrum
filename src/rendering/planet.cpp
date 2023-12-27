@@ -25,18 +25,18 @@ Mesh create_sphere(int rings, int sectors)
 		for (int j = 0; j < sectors; j++)
 		{
 			int s_1 = sectors + 1;
-			int top_left = i * s_1 + j;
-			int top_right = i * s_1 + (j + 1);
-			int bottom_left = (i - 1) * s_1 + j;
-			int bottom_right = (i - 1) * s_1 + (j + 1);
+			int top_left = i * s_1 + (j + 1);
+			int top_right = i * s_1 + j;
+			int bottom_left = (i - 1) * s_1 + (j + 1);
+			int bottom_right = (i - 1) * s_1 + j;
 
 			mesh.indices.push_back(top_left);
-			mesh.indices.push_back(top_right);
 			mesh.indices.push_back(bottom_left);
+			mesh.indices.push_back(top_right);
 
 			mesh.indices.push_back(top_right);
-			mesh.indices.push_back(bottom_right);
 			mesh.indices.push_back(bottom_left);
+			mesh.indices.push_back(bottom_right);
 		}
 	}
 	return mesh;

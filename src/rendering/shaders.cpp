@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include "shaders.hpp"
 
@@ -93,6 +93,13 @@ Shader::~Shader()
 	glDeleteProgram(m_id);
 }
 
+int Shader::get_location(const std::string &name)
+{
+	if (m_uniforms.find(name) == m_uniforms.end())
+		m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+	return m_uniforms[name];
+}
+
 unsigned int Shader::id() const
 {
 	return m_id;
@@ -101,4 +108,19 @@ unsigned int Shader::id() const
 void Shader::use() const
 {
 	glUseProgram(m_id);
+}
+
+void Shader::set_uniform(const std::string &name, int value)
+{
+	glUniform1i(get_location(name), value);
+}
+
+void Shader::set_uniform(const std::string &name, float value)
+{
+	glUniform1f(get_location(name), value);
+}
+
+void Shader::set_uniform(const std::string &name, glm::mat4 &value)
+{
+	glUniformMatrix4fv(get_location(name), 1, GL_FALSE, glm::value_ptr(value));
 }
