@@ -1,4 +1,4 @@
 Astrum.make
 bin
-bin-int
+obj
 Makefile
