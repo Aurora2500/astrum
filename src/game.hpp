@@ -1,4 +1,4 @@
-#include "assets/asset_manager.hpp"
+#include "util/asset_manager.hpp"
 
 class Game
 {

@@ -24,6 +24,7 @@ Window::Window(const char *title) : m_is_fullscreen(false), m_width(1600), m_hei
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
+	SDL_GL_SetSwapInterval(0);
 
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 }

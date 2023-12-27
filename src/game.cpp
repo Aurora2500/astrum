@@ -1,4 +1,5 @@
 #include <array>
+#include <iostream>
 #include <algorithm>
 
 #include <SDL2/SDL.h>
@@ -13,6 +14,8 @@
 #include "rendering/mesh.hpp"
 #include "rendering/vertex.hpp"
 #include "rendering/planet.hpp"
+
+#include "util/stopwatch.hpp"
 
 Game::Game()
 {
@@ -42,10 +45,14 @@ void Game::run()
 			window.handle_events(event);
 			cam.update(event, mouse_down);
 		}
+		Stopwatch sw;
 		window.clear();
 		glm::mat4 view = cam.get_view_matrix(window.aspect());
 		shader.set_uniform("view", view);
 		mesh.draw();
 		window.update();
+		float ms = sw.elapsed();
+		float fps = 1000.0f / ms;
+		std::cout << "FPS: " << fps << std::endl;
 	}
 }

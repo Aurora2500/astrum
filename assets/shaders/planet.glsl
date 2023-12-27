@@ -7,28 +7,29 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 uv;
 
-out vec3 o_normal;
-out vec2 o_uv;
+out vec3 v_normal;
+out vec2 v_uv;
 
 void main()
 {
 	gl_Position = view * vec4(position, 1.0);
-	o_normal = normal;
-	o_uv = uv;
+	v_normal = normal;
+	v_uv = uv;
 }
 
 //shader fragment
 #version 330 core
 
-in vec3 o_normal;
-in vec2 o_uv;
+in vec3 v_normal;
+in vec2 v_uv;
 
 out vec4 color;
+
+const vec3 wavelengths = vec3(700, 530, 440);
 
 float random (vec2 st) {
 	return fract(sin(dot( st.xy, vec2(12.9898,78.233)))* 43758.5453123);
 }
-
 
 // Based on Morgan McGuire @morgan3d
 // https://www.shadertoy.com/view/4dS3Wd
@@ -67,13 +68,30 @@ float fbm (in vec2 p, in float wrap) {
 	return value;
 }
 
+vec4 atmosphere_tint(float incidence)
+{
+	float strength = smoothstep(-0.2, 2.0, incidence);
+	//vec3 red = vec3(0.63, 0.28, 0.0);
+	vec3 blue = vec3(0.25, 0.9, 0.9);
+	vec3 red = vec3(0.9, 0.45, 0.3);
+
+	float sunset = 1.0 - abs(incidence);
+
+
+	return vec4(red, strength);
+}
+
 
 void main()
 {
-	vec2 p = o_uv * 10.0;
-	float n = fbm(p, 10.0);
-	vec3 col = n < 0.5 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.7, 0.4) * n;
+	float s = 10;
+	float water = 0.55;
+	vec2 p = v_uv * s;
+	float n = fbm(p, s);
+	vec3 col = n < water ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.7, 0.4) * n;
 	vec3 dir = vec3(0.3, 0.4, -0.1);
-	float intensity = dot(normalize(o_normal), normalize(dir));
+	float intensity = dot(normalize(v_normal), normalize(dir));
+	float min_intensity = 0.3;
+	intensity = min_intensity + (1-min_intensity) * smoothstep(0.0, 1.0, intensity);
 	color = vec4(intensity * col, 1.0);
 }

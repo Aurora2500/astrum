@@ -5,7 +5,7 @@
 
 #include "camera.hpp"
 
-Camera::Camera() : position(0.0f, 0.0f, 0.0f), m_yaw(0.0f), m_pitch(0.0f), m_distance(10.0f), m_fov(45.0f), m_near(0.1f), m_far(100.0f)
+Camera::Camera() : position(0.0f, 0.0f, 0.0f), m_yaw(0.0f), m_pitch(0.0f), m_distance(10.0f), m_fov(25.0f), m_near(0.1f), m_far(100.0f)
 {
 }
 
