@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Window::Window(const char *title) : m_is_fullscreen(false), m_width(1600), m_height(900)
+Window::Window(const char *title) : m_is_fullscreen(false), m_running(true), m_width(1600), m_height(900)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	constexpr SDL_WindowFlags flags = static_cast<SDL_WindowFlags>(
@@ -70,6 +70,9 @@ void Window::handle_events(SDL_Event &event)
 {
 	switch (event.type)
 	{
+		case SDL_QUIT:
+			m_running = false;
+			break;
 	case SDL_WINDOWEVENT:
 		switch (event.window.event)
 		{
@@ -85,6 +88,9 @@ void Window::handle_events(SDL_Event &event)
 		case SDLK_f:
 			m_is_fullscreen = !m_is_fullscreen;
 			SDL_SetWindowFullscreen(m_window, m_is_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+			break;
+		case SDLK_ESCAPE:
+			m_running = false;
 			break;
 		}
 		break;

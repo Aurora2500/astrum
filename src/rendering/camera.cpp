@@ -15,12 +15,12 @@ Camera::~Camera()
 
 void Camera::update(SDL_Event &event, bool &mouse_down)
 {
-	if (event.type == SDL_MOUSEBUTTONDOWN)
+	if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
 	{
 		mouse_down = true;
 	}
 
-	if (event.type == SDL_MOUSEBUTTONUP)
+	if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)
 	{
 		mouse_down = false;
 	}

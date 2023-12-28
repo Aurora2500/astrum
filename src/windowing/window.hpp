@@ -6,7 +6,7 @@ class Window
 	SDL_Window *m_window;
 	SDL_GLContext m_gl_context;
 
-	bool m_is_fullscreen;
+	bool m_is_fullscreen, m_running;
 	int m_width, m_height;
 
 public:
@@ -19,6 +19,8 @@ public:
 	int width() const;
 	int height() const;
 	float aspect() const;
+
+	inline bool running() const { return m_running; }
 
 	void handle_events(SDL_Event &event);
 };

@@ -26,7 +26,6 @@ void Game::run()
 	Window window("Astrum");
 
 	SDL_Event event;
-	bool running = true;
 
 	Camera cam;
 	Shader &shader = m_assets.get_shader("planet");
@@ -36,12 +35,10 @@ void Game::run()
 
 	bool mouse_down = false;
 
-	while (running)
+	while (window.running())
 	{
 		while (SDL_PollEvent(&event))
 		{
-			if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-				running = false;
 			window.handle_events(event);
 			cam.update(event, mouse_down);
 		}
