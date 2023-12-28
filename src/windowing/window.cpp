@@ -38,9 +38,9 @@ Window::~Window()
 
 void Window::clear()
 {
-	float r = 11.0f / 255.0 / 3.0;
-	float g = 77.0f / 255.0 / 3.0;
-	float b = 117.0f / 255.0 / 3.0;
+	float r = 11.0f / 255.0 / 8.0;
+	float g = 77.0f / 255.0 / 8.0;
+	float b = 117.0f / 255.0 / 8.0;
 	glViewport(0, 0, m_width, m_height);
 	glClearColor(r, g, b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

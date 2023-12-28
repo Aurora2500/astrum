@@ -1,6 +1,11 @@
 #pragma once
+
 #include <vector>
+
 #include "vertex.hpp"
+
+namespace rendering
+{
 
 struct Mesh
 {
@@ -12,3 +17,7 @@ struct Mesh
 
 	void draw() const;
 };
+
+Mesh create_sphere(int rings, int sectors);
+
+}

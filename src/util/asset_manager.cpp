@@ -12,7 +12,7 @@ AssetManager::AssetManager()
 	// SDL_free(base);
 }
 
-Shader &AssetManager::get_shader(const std::string &name)
+rendering::Shader &AssetManager::get_shader(const std::string &name)
 {
 	// check if shader is already loaded
 	auto it = m_shaders.find(name);
@@ -23,6 +23,6 @@ Shader &AssetManager::get_shader(const std::string &name)
 	// else, we load it
 	std::string path = m_base_path + "assets/shaders/" + name + ".glsl";
 	std::ifstream file(path);
-	m_shaders.insert({name, std::make_unique<Shader>(file)});
+	m_shaders.insert({name, std::make_unique<rendering::Shader>(file)});
 	return *m_shaders[name];
 }

@@ -5,7 +5,7 @@
 
 #include "camera.hpp"
 
-Camera::Camera() : position(0.0f, 0.0f, 0.0f), m_yaw(0.0f), m_pitch(0.0f), m_distance(10.0f), m_fov(25.0f), m_near(0.1f), m_far(100.0f)
+Camera::Camera() : m_pos(0.0f, 0.0f, 0.0f), m_yaw(0.0f), m_pitch(0.0f), m_distance(10.0f), m_fov(25.0f), m_near(0.1f), m_far(100.0f)
 {
 }
 
@@ -49,7 +49,7 @@ glm::mat4 Camera::get_view_matrix(float ratio) const
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -m_distance));
 	view = glm::rotate(view, m_pitch, glm::vec3(1.0f, 0.0f, 0.0f));
 	view = glm::rotate(view, m_yaw, glm::vec3(0.0f, 1.0f, 0.0f));
-	view = glm::translate(view, -position);
+	view = glm::translate(view, -m_pos);
 
 	glm::mat4 projection = glm::perspective(glm::radians(m_fov), ratio, m_near, m_far);
 	return projection * view;

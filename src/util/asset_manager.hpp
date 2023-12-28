@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unordered_map>
 #include <memory>
 
@@ -7,9 +9,9 @@ class AssetManager
 {
 private:
 	std::string m_base_path;
-	std::unordered_map<std::string, std::unique_ptr<Shader>> m_shaders;
+	std::unordered_map<std::string, std::unique_ptr<rendering::Shader>> m_shaders;
 
 public:
 	AssetManager();
-	Shader &get_shader(const std::string &name);
+	rendering::Shader &get_shader(const std::string &name);
 };

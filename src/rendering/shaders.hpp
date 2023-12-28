@@ -1,9 +1,13 @@
 #pragma once
+
 #include <string>
 #include <fstream>
 #include <unordered_map>
 #include <string>
+
 #include <glm/glm.hpp>
+
+namespace rendering {
 
 class Shader
 {
@@ -24,3 +28,5 @@ public:
 	void set_uniform(const std::string &name, float value);
 	void set_uniform(const std::string &name, glm::mat4 &value);
 };
+
+}

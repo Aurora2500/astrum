@@ -7,6 +7,9 @@
 
 #include "shaders.hpp"
 
+namespace rendering
+{
+
 static unsigned int compile_shader(unsigned int type, const std::string &source)
 {
 	unsigned int id = glCreateShader(type);
@@ -96,7 +99,13 @@ Shader::~Shader()
 int Shader::get_location(const std::string &name)
 {
 	if (m_uniforms.find(name) == m_uniforms.end())
-		m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+	{
+		int loc = glGetUniformLocation(m_id, name.c_str());
+		if (loc == -1)
+			std::cerr << "Warning: uniform " << name << " doesn't exist!" << std::endl;
+		m_uniforms[name] = loc;
+		return loc;
+	}
 	return m_uniforms[name];
 }
 
@@ -123,4 +132,6 @@ void Shader::set_uniform(const std::string &name, float value)
 void Shader::set_uniform(const std::string &name, glm::mat4 &value)
 {
 	glUniformMatrix4fv(get_location(name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
 }
