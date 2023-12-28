@@ -16,6 +16,10 @@
 #include "rendering/planet.hpp"
 #include "rendering/star.hpp"
 
+#include "rendering/frame_buffer.hpp"
+#include "rendering/texture.hpp"
+#include "rendering/render_buffer.hpp"
+
 #include "util/stopwatch.hpp"
 
 #include "core/star.hpp"
@@ -27,76 +31,31 @@ Game::Game()
 
 void Game::run()
 {
+	using namespace rendering;
+
 	Window window("Astrum");
 
 	SDL_Event event;
 
 	Camera cam;
-	rendering::Mesh mesh = rendering::create_sphere(90, 90);
+	Mesh mesh = rendering::create_sphere(90, 90);
 	mesh.make_buffers();
 
 	bool mouse_down = false;
 
 	core::Star star(core::StarType::YellowDwarf, 420, 2.0);
 
-	// std::vector<core::Planet> planets;
-	// planets.emplace_back(core::PlanetType::Continental, 520);
-	// planets.emplace_back(core::PlanetType::Desert, 620);
-
 	auto star_shader = m_assets.get_shader("star");
 	auto planet_shader = m_assets.get_shader("continental");
 	// auto planet_shader2 = m_assets.get_shader("desert");
 
-	unsigned int fbo;
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	unsigned int tex;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_RGB,
-			window.width(),
-			window.height(),
-			0,
-			GL_RGB,
-			GL_UNSIGNED_BYTE,
-			nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(
-			GL_TEXTURE_2D,
-			GL_TEXTURE_WRAP_S,
-			GL_CLAMP_TO_BORDER);
-	glTexParameteri(
-			GL_TEXTURE_2D,
-			GL_TEXTURE_WRAP_T,
-			GL_CLAMP_TO_BORDER);
-	// set the border color
-	glTexParameterfv(
-			GL_TEXTURE_2D,
-			GL_TEXTURE_BORDER_COLOR,
-			glm::value_ptr(glm::vec3(0.0f)));
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(
-			GL_RENDERBUFFER,
-			GL_DEPTH24_STENCIL8,
-			window.width(),
-			window.height());
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(
-			GL_FRAMEBUFFER,
-			GL_DEPTH_STENCIL_ATTACHMENT,
-			GL_RENDERBUFFER,
-			rbo);
-	
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	FrameBuffer frame_buffer;
+	Texture texture;
+	texture.store(window.width(), window.height());
+	frame_buffer.attatch(texture);
+	RenderBuffer render_buffer;
+	render_buffer.store(window.width(), window.height());
+	frame_buffer.attatch(render_buffer);
 
 	auto screen_shader = m_assets.get_shader("redraw");
 
@@ -128,10 +87,7 @@ void Game::run()
 		}
 		glm::mat4 view = cam.get_view_matrix(window.aspect());
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
+		frame_buffer.bind_and_clear();
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(star.size()));
@@ -150,9 +106,9 @@ void Game::run()
 		planet_shader.set_uniform("view", view);
 		mesh.draw();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, tex);
-		window.clear();
+		window.bind_and_clear();
+		texture.bind();
+
 		screen_shader.use();
 		screen_mesh.draw();
 

@@ -14,6 +14,7 @@ public:
 	~Window();
 
 	void clear();
+	void bind_and_clear();
 	void update();
 
 	int width() const;

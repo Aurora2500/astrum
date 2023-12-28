@@ -46,6 +46,13 @@ void Window::clear()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Window::bind_and_clear()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	clear();
+
+}
+
 void Window::update()
 {
 	SDL_GL_SwapWindow(m_window);
