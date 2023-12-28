@@ -38,7 +38,7 @@ void Camera::update(SDL_Event &event, bool &mouse_down)
 
 	if (event.type == SDL_MOUSEWHEEL)
 	{
-		m_distance -= event.wheel.y * 0.1f;
+		m_distance *= std::pow(1.1f, -event.wheel.y);
 		m_distance = std::clamp(m_distance, 1.0f, 100.0f);
 	}
 }

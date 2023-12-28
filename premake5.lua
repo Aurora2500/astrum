@@ -12,6 +12,7 @@ project "Astrum"
 kind "WindowedApp"
 language "C++"
 cppdialect "C++20"
+toolset "clang"
 
 targetdir("bin/" .. outputdir)
 objdir("obj/" .. outputdir)
@@ -34,7 +35,7 @@ newaction {
     execute     = function()
         print("clean the build...")
         os.rmdir("./bin")
-        os.rmdir("./bin-int")
+        os.rmdir("./obj")
         os.remove("./Makefile")
         os.remove("./Astrum.make")
         print("done.")
