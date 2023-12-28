@@ -27,68 +27,62 @@ out vec4 color;
 
 const vec3 wavelengths = vec3(700, 530, 440);
 
-float random (vec2 st) {
-	return fract(sin(dot( st.xy, vec2(12.9898,78.233)))* 43758.5453123);
+float rand3(vec3 p) {
+	return fract(sin(dot(p, vec3(12.9898, 78.233, 45.5432))) * 43758.5453);
 }
 
-// Based on Morgan McGuire @morgan3d
-// https://www.shadertoy.com/view/4dS3Wd
-float noise (vec2 st, float wrap) {
-	vec2 i = floor(st);
-	vec2 f = fract(st);
+float noise3(vec3 p)
+{
+	vec3 i = floor(p);
+	vec3 fr = fract(p);
 
-	vec2 ai = vec2(mod(i.x, wrap), i.y);
-	vec2 bi = vec2(mod(i.x + 1.0, wrap), i.y);
-	vec2 ci = vec2(mod(i.x, wrap), i.y + 1.0);
-	vec2 di = vec2(mod(i.x + 1.0, wrap), i.y + 1.0);
-	float a = random(ai);
-	float b = random(bi);
-	float c = random(ci);
-	float d = random(di);
-	
-	vec2 u = f * f * (3.0 - 2.0 * f);
+	float a = rand3(i);
+	float b = rand3(i + vec3(1.0, 0.0, 0.0));
+	float c = rand3(i + vec3(0.0, 1.0, 0.0));
+	float d = rand3(i + vec3(1.0, 1.0, 0.0));
+	float e = rand3(i + vec3(0.0, 0.0, 1.0));
+	float f = rand3(i + vec3(1.0, 0.0, 1.0));
+	float g = rand3(i + vec3(0.0, 1.0, 1.0));
+	float h = rand3(i + vec3(1.0, 1.0, 1.0));
 
-	return mix(a, b, u.x) +
-		(c - a)* u.y * (1.0 - u.x) +
-		(d - b) * u.x * u.y;
+	vec3 u = fr * fr * (3.0 - 2.0 * fr);
+
+	float x1 = mix(a, b, u.x);
+	float x2 = mix(c, d, u.x);
+	float x3 = mix(e, f, u.x);
+	float x4 = mix(g, h, u.x);
+
+	float y1 = mix(x1, x2, u.y);
+	float y2 = mix(x3, x4, u.y);
+
+	return mix(y1, y2, u.z);
 }
 
-
-float fbm (in vec2 p, in float wrap) {
-	const int OCTAVES = 100;
+float fbm3(vec3 p)
+{
+	const int OCTAVES = 10;
 	// Initial values
 	float value = 0.0;
 	float amplitude = .5;
 	// Loop of octaves
 	for (int i = 0; i < OCTAVES; i++) {
-		value += amplitude * noise(p, wrap);
+		value += amplitude * noise3(p);
 		p *= 2.;
 		amplitude *= .5;
 	}
 	return value;
 }
 
-vec4 atmosphere_tint(float incidence)
-{
-	float strength = smoothstep(-0.2, 2.0, incidence);
-	//vec3 red = vec3(0.63, 0.28, 0.0);
-	vec3 blue = vec3(0.25, 0.9, 0.9);
-	vec3 red = vec3(0.9, 0.45, 0.3);
-
-	float sunset = 1.0 - abs(incidence);
-
-
-	return vec4(red, strength);
-}
-
-
 void main()
 {
-	float s = 10;
-	float water = 0.55;
-	vec2 p = v_uv * s;
-	float n = fbm(p, s);
-	vec3 col = n < water ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.7, 0.4) * n;
+	float s = 3;
+	float water = 0.48;
+	vec3 p = v_normal * s;
+	float n = fbm3(p);
+	float in_water = smoothstep(water, water + 0.005, n);
+	vec3 terrain_col = vec3(1.0, 0.7, 0.4) * n;
+	vec3 water_col = vec3(0.0, 0.0, 1.0) * n;
+	vec3 col = mix(water_col, terrain_col, in_water);
 	vec3 dir = vec3(0.3, 0.4, -0.1);
 	float intensity = dot(normalize(v_normal), normalize(dir));
 	float min_intensity = 0.3;
