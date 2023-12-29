@@ -7,6 +7,7 @@ class RenderBuffer
 {
 private:
 	unsigned int m_id;
+	unsigned int m_width, m_height;
 
 public:
 	RenderBuffer();

@@ -35,15 +35,20 @@ void Game::run()
 
 	Window window("Astrum");
 
+	int n;
+	glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &n);
+	std::cout << "Max uniform size: " << n << std::endl;
+
 	SDL_Event event;
 
-	Camera cam;
+	Camera cam(window.aspect());
 	Mesh mesh = rendering::create_sphere(90, 90);
 	mesh.make_buffers();
 
 	bool mouse_down = false;
 
-	core::Star star(core::StarType::YellowDwarf, 420, 2.0);
+	core::Star star(core::StarType::YellowDwarf, 420, 2.0, glm::vec3(0.0f));
+	StarRenderer star_r(star, mesh, m_assets);
 
 	auto star_shader = m_assets.get_shader("star");
 	auto planet_shader = m_assets.get_shader("continental");
@@ -84,18 +89,18 @@ void Game::run()
 		{
 			window.handle_events(event);
 			cam.update(event, mouse_down);
+			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED)
+			{
+				texture.store(event.window.data1, event.window.data2);
+				render_buffer.store(event.window.data1, event.window.data2);
+			}
 		}
-		glm::mat4 view = cam.get_view_matrix(window.aspect());
+		glm::mat4 view = cam.get_view_matrix();
 
 		frame_buffer.bind_and_clear();
 
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(star.size()));
-
-		star_shader.use();
-		star_shader.set_uniform("model", model);
-		star_shader.set_uniform("view", view);
-		mesh.draw();
+		star_r.draw(cam);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 10.0f));

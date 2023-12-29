@@ -21,6 +21,7 @@ private:
 	unsigned int m_id;
 	TextureSampling m_sampling;
 	TextureWrapping m_wrapping;
+	unsigned int m_width, m_height;
 
 public:
 	Texture(TextureSampling sampling = TextureSampling::Linear, TextureWrapping wrapping = TextureWrapping::Border, glm::vec3 &&col = glm::vec3(0.0f, 0.0f, 0.0f));

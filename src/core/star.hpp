@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "planet.hpp"
 
 namespace core {
@@ -24,11 +26,14 @@ private:
 	float m_size;
 	std::vector<Planet> m_planets;
 
+	glm::vec3 m_position;
+
 public:
-	Star(StarType type, int seed, float size);
+	Star(StarType type, int seed, float size, glm::vec3 pos);
 
 	inline int seed() const { return m_seed; }
 	inline float size() const { return m_size; }
+	inline const glm::vec3 &pos() const { return m_position; }
 	inline const std::vector<Planet> &planets() const { return m_planets; }
 };
 

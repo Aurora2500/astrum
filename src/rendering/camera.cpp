@@ -5,7 +5,15 @@
 
 #include "camera.hpp"
 
-Camera::Camera() : m_pos(0.0f, 0.0f, 0.0f), m_yaw(0.0f), m_pitch(0.0f), m_distance(10.0f), m_fov(25.0f), m_near(0.1f), m_far(100.0f)
+Camera::Camera(float aspect)
+	: m_pos(0.0f, 0.0f, 0.0f)
+	, m_yaw(0.0f)
+	, m_pitch(0.0f)
+	, m_distance(10.0f)
+	, m_fov(25.0f)
+	, m_near(0.1f)
+	, m_far(300.0f)
+	, m_aspect(aspect)
 {
 }
 
@@ -43,7 +51,7 @@ void Camera::update(SDL_Event &event, bool &mouse_down)
 	}
 }
 
-glm::mat4 Camera::get_view_matrix(float ratio) const
+glm::mat4 Camera::get_view_matrix() const
 {
 	glm::mat4 view(1.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -m_distance));
@@ -51,6 +59,6 @@ glm::mat4 Camera::get_view_matrix(float ratio) const
 	view = glm::rotate(view, m_yaw, glm::vec3(0.0f, 1.0f, 0.0f));
 	view = glm::translate(view, -m_pos);
 
-	glm::mat4 projection = glm::perspective(glm::radians(m_fov), ratio, m_near, m_far);
+	glm::mat4 projection = glm::perspective(glm::radians(m_fov), m_aspect, m_near, m_far);
 	return projection * view;
 }

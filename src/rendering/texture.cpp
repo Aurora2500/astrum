@@ -74,6 +74,7 @@ void Texture::store(
 		unsigned int width,
 		unsigned int height)
 {
+	if (m_width == width && m_height == height) return;
 	glBindTexture(GL_TEXTURE_2D, m_id);
 	glTexImage2D(
 			GL_TEXTURE_2D,
@@ -85,6 +86,8 @@ void Texture::store(
 			GL_RGB,
 			GL_UNSIGNED_BYTE,
 			nullptr);
+	m_width = width;
+	m_height = height;
 }
 
 }
