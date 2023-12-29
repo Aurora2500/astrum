@@ -27,6 +27,7 @@ public:
 	void set_uniform(const std::string &name, int value);
 	void set_uniform(const std::string &name, float value);
 	void set_uniform(const std::string &name, glm::mat4 &value);
+	void set_uniform(const std::string &name, glm::vec3 &value);
 };
 
 }

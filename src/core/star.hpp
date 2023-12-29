@@ -34,6 +34,7 @@ public:
 	inline int seed() const { return m_seed; }
 	inline float size() const { return m_size; }
 	inline const glm::vec3 &pos() const { return m_position; }
+	inline std::vector<Planet> &planets() { return m_planets; }
 	inline const std::vector<Planet> &planets() const { return m_planets; }
 };
 

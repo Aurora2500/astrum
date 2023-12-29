@@ -21,6 +21,8 @@ void main()
 //shader fragment
 #version 330 core
 
+uniform vec3 light;
+
 in vec3 v_normal;
 in vec2 v_uv;
 
@@ -84,8 +86,7 @@ void main()
 	vec3 terrain_col = vec3(1.0, 0.7, 0.4) * n;
 	vec3 water_col = vec3(0.0, 0.0, 1.0) * n;
 	vec3 col = mix(water_col, terrain_col, in_water);
-	vec3 dir = vec3(0.3, 0.4, -0.1);
-	float intensity = dot(normalize(v_normal), normalize(dir));
+	float intensity = dot(normalize(v_normal), normalize(-light));
 	float min_intensity = 0.1;
 	intensity = min_intensity + (1-min_intensity) * smoothstep(0.0, 1.0, intensity);
 	color = vec4(intensity * col, 1.0);
