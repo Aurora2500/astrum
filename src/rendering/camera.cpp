@@ -43,8 +43,6 @@ void Camera::update(SDL_Event &event, bool &mouse_down)
 		m_pitch = std::clamp(m_pitch, -max_pitch, max_pitch);
 
 		m_yaw = fmod(m_yaw, 2 * M_PI);
-
-		std::cout << this->pos().x << ", " << this->pos().y << ", " << this->pos().z << std::endl;
 	}
 
 	if (event.type == SDL_MOUSEWHEEL)
@@ -69,7 +67,7 @@ glm::mat4 Camera::get_view_matrix() const
 glm::vec3 Camera::pos() const
 {
 	return m_pos + glm::vec3(
-		- m_distance * std::cos(m_pitch) * std::sin(m_yaw),
+		-m_distance * std::cos(m_pitch) * std::sin(m_yaw),
 		m_distance * std::sin(m_pitch),
-		- m_distance * std::cos(m_pitch) * std::cos(m_yaw));
+		m_distance * std::cos(m_pitch) * std::cos(m_yaw));
 }

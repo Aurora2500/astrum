@@ -22,14 +22,15 @@ out vec3 v_world_light;
 
 void main()
 {
-	gl_Position = view * model * vec4(position, 1.0);
+	vec4 world_pos = model * vec4(position, 1.0);
+	gl_Position = view * world_pos;
 	v_uv = uv;
 
 	v_normal = normal;
 	mat3 tbn = mat3(tangent, bitangent, normal);
 	tbn = transpose(tbn);
 	v_light = tbn * (light);
-	vec3 view_dir = normalize(view_pos - position);
+	vec3 view_dir = normalize(view_pos - world_pos.xyz);
 	v_view_dir = tbn * (view_dir);
 
 	v_world_view_dir = view_dir;
@@ -107,19 +108,48 @@ void main()
 	vec3 p = v_normal * s;
 	float n = fbm3(p);
 
+ float cloud_s = 2.5;
+	vec3 cloud_p = v_normal * cloud_s + 420;
+
+	float cloud_n = fbm3(cloud_p);
+	float in_cloud = smoothstep(0.4, 0.8, cloud_n);
+
 	float in_water = 1 - smoothstep(water, water + 0.005, n);
 	vec3 terrain_col = vec3(1.0, 0.7, 0.4) * n;
-	vec3 water_col = vec3(0.0, 0.0, 1.0) * mix(0.7, 1.0, n);
+	vec3 water_col = vec3(0.0, 0.0, 1.0) * mix(0.3, 1.0, n);
 	vec3 col = mix(terrain_col, water_col, in_water);
+	col = mix(col, vec3(1.0, 1.0, 1.0), in_cloud);
 
-	vec3 half_dir = normalize(v_world_light + v_world_view_dir);
-	float spec = pow(max(dot(v_normal, half_dir), 0.0), 32.0);
+	float cloud_elevation;
+	float cloud_turn_u = asin(v_light.x);
+	float cloud_turn_v = asin(v_light.y);
 
+	mat3 cloud_rot = mat3(
+		vec3(cos(cloud_turn_u), 0, sin(cloud_turn_u)),
+		vec3(0, 1, 0),
+		vec3(-sin(cloud_turn_u), 0, cos(cloud_turn_u))
+	);
+
+	cloud_rot = mat3(
+		vec3(1, 0, 0),
+		vec3(0, cos(cloud_turn_v), -sin(cloud_turn_v)),
+		vec3(0, sin(cloud_turn_v), cos(cloud_turn_v))
+	) * cloud_rot;
+
+	vec3 cloud_dir = cloud_rot * v_normal;
+
+	float cloud_shadow_n = fbm3(cloud_dir * cloud_s + 420);
+
+	float cloud_shadow = smoothstep(0.4, 0.8, cloud_shadow_n);
+
+	float ambient = 0.2;
 
 	float diffuse = dot(normalize(v_light), norm);
 	diffuse = max(diffuse, 0.0);
-	float ambient = 0.2;
 
-	float intensity = ambient + diffuse + (spec * in_water);
-	color = vec4(col * spec, 1.0);
+	vec3 half_dir = normalize(v_light + v_view_dir);
+	float spec = pow(max(dot(norm, half_dir), 0.0), 32.0);
+
+	float intensity = ambient + (diffuse + (spec * in_water * (1- in_cloud)));
+	color = vec4(col * intensity, 1.0);
 }
