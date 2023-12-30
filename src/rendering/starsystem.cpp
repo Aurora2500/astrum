@@ -32,7 +32,7 @@ StarSystemRenderer::StarSystemRenderer(AssetManager &assets, const core::Star &s
 void StarSystemRenderer::draw(Camera const&cam)
 {
 	auto &star_shader = m_assets.get_shader("star");
-	auto &planet_shader = m_assets.get_shader("continental");
+	auto &planet_shader = m_assets.get_shader("rock_planet");
 	auto view = cam.get_view_matrix();
 
 	star_shader.use();

@@ -17,8 +17,6 @@ out vec2 v_uv;
 out vec3 v_normal;
 out vec3 v_light;
 out vec3 v_view_dir;
-out vec3 v_world_view_dir;
-out vec3 v_world_light;
 
 void main()
 {
@@ -32,9 +30,6 @@ void main()
 	v_light = tbn * (light);
 	vec3 view_dir = normalize(view_pos - world_pos.xyz);
 	v_view_dir = tbn * (view_dir);
-
-	v_world_view_dir = view_dir;
-	v_world_light = light;
 }
 
 //shader fragment
@@ -46,9 +41,6 @@ in vec3 v_normal;
 in vec2 v_uv;
 in vec3 v_light;
 in vec3 v_view_dir;
-
-in vec3 v_world_view_dir;
-in vec3 v_world_light;
 
 out vec4 color;
 
