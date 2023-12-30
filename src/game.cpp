@@ -12,7 +12,6 @@
 
 #include "rendering/camera.hpp"
 #include "rendering/mesh.hpp"
-#include "rendering/vertex.hpp"
 
 #include "rendering/starsystem.hpp"
 
@@ -57,6 +56,8 @@ void Game::run()
 		30, glm::vec3(1.0f, 4.0f, -5.0f));
 
 	StarSystemRenderer renderer(m_assets, star);
+
+	cam.focus() = glm::vec3(0.0f, 0.0f, 10.0f);
 	
 	while (window.running())
 	{

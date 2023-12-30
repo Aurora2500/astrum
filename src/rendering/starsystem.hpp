@@ -16,7 +16,7 @@ class StarSystemRenderer
 private:
 	const core::Star &m_star;
 	AssetManager &m_assets;
-	Mesh m_sphere_mesh;
+	FullMesh m_sphere_mesh;
 
 public:
 	StarSystemRenderer(AssetManager &assets, const core::Star &star);

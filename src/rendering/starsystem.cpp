@@ -45,17 +45,18 @@ void StarSystemRenderer::draw(Camera const&cam)
 		m_sphere_mesh.draw();
 	}
 
-	auto pos = m_star.pos();
+	auto cam_pos = cam.pos();
 
-	planet_shader.use();
 	{
 		for (auto &p : m_star.planets())
 		{
+	planet_shader.use();
 			auto model = planet_model(p);
-			auto light_dir = glm::normalize(p.pos() - pos);
+			auto light_dir = glm::normalize(m_star.pos() - p.pos());
 			planet_shader.set_uniform("model", model);
 			planet_shader.set_uniform("view", view);
 			planet_shader.set_uniform("light", light_dir);
+			planet_shader.set_uniform("view_pos", cam_pos);
 			m_sphere_mesh.draw();
 		}
 	}

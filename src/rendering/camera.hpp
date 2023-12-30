@@ -26,5 +26,7 @@ public:
 	inline float &pitch() { return m_pitch; }
 	inline float &distance() { return m_distance; }
 	inline float &aspect() { return m_aspect; }
-	inline glm::vec3 &position() { return m_pos; }
+	inline glm::vec3 &focus() { return m_pos; }
+	inline const glm::vec3 &focus() const { return m_pos; }
+	glm::vec3 pos() const;
 };
