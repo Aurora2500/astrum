@@ -8,7 +8,7 @@ namespace rendering
 
 RenderBuffer::RenderBuffer()
 {
-	glGenRenderbuffers(1, &m_id);
+	glCreateRenderbuffers(1, &m_id);
 }
 
 RenderBuffer::~RenderBuffer()
@@ -21,9 +21,8 @@ void RenderBuffer::store(
 		unsigned int height)
 {
 	if (m_width == width && m_height == height) return;
-	glBindRenderbuffer(GL_RENDERBUFFER, m_id);
-	glRenderbufferStorage(
-			GL_RENDERBUFFER,
+	glNamedRenderbufferStorage(
+			m_id,
 			GL_DEPTH24_STENCIL8,
 			width,
 			height);

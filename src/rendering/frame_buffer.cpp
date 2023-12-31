@@ -9,25 +9,18 @@ namespace rendering
 
 FrameBuffer::FrameBuffer()
 {
-	glGenFramebuffers(1, &m_id);
+	glCreateFramebuffers(1, &m_id);
 }
 
 void FrameBuffer::attatch(const Texture& texture)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_id);
-	glFramebufferTexture2D(
-			GL_FRAMEBUFFER,
-			GL_COLOR_ATTACHMENT0,
-			GL_TEXTURE_2D,
-			texture.id(),
-			0);
+	glNamedFramebufferTexture(m_id, GL_COLOR_ATTACHMENT0, texture.id(), 0);
 }
 
 void FrameBuffer::attatch(const RenderBuffer& render_buffer)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_id);
-	glFramebufferRenderbuffer(
-			GL_FRAMEBUFFER,
+	glNamedFramebufferRenderbuffer(
+			m_id,
 			GL_DEPTH_STENCIL_ATTACHMENT,
 			GL_RENDERBUFFER,
 			render_buffer.id());

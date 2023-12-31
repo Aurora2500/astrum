@@ -27,29 +27,23 @@ static GLenum texture_wrapping_to_gl(TextureWrapping wrapping)
 	}
 }
 
-
 Texture::Texture(TextureSampling sampling, TextureWrapping wrapping, glm::vec3 &&col)
 	: m_sampling(sampling), m_wrapping(wrapping)
 {
-	glGenTextures(1, &m_id);
-
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_id);
 
 	GLenum sampling_gl = texture_sampling_to_gl(sampling);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampling_gl);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampling_gl);
+	glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, sampling_gl);
+	glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, sampling_gl);
 
 	GLenum wrapping_gl = GL_REPEAT;
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapping_gl);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapping_gl);
+	glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, wrapping_gl);
+	glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, wrapping_gl);
 
 	if (wrapping == TextureWrapping::Border)
 	{
-		// set the border color
-		glTexParameterfv(
-				GL_TEXTURE_2D,
+		glTextureParameterfv(
+				m_id,
 				GL_TEXTURE_BORDER_COLOR,
 				glm::value_ptr(col));
 	}
@@ -75,17 +69,12 @@ void Texture::store(
 		unsigned int height)
 {
 	if (m_width == width && m_height == height) return;
-	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_RGB,
+	glTextureStorage2D(
+			m_id,
+			1,
+			GL_RGB8,
 			width,
-			height,
-			0,
-			GL_RGB,
-			GL_UNSIGNED_BYTE,
-			nullptr);
+			height);
 	m_width = width;
 	m_height = height;
 }
