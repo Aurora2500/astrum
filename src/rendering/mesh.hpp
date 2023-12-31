@@ -12,14 +12,14 @@ struct Vertex2D
 	glm::vec2 position;
 	glm::vec2 tex_coords;
 
-	static void attrib();
+	static void attrib(unsigned int vao, unsigned int vbo);
 };
 
 struct SimpleVertex
 {
 	glm::vec3 position;
 
-	static void attrib();
+	static void attrib(unsigned int vao, unsigned int vbo);
 };
 
 struct UVNormalVertex
@@ -28,7 +28,7 @@ struct UVNormalVertex
 	glm::vec3 normal;
 	glm::vec2 tex_coords;
 
-	static void attrib();
+	static void attrib(unsigned int vao, unsigned int vbo);
 };
 
 struct FullVertex
@@ -39,7 +39,7 @@ struct FullVertex
 	glm::vec3 tangent;
 	glm::vec3 bitangent;
 
-	static void attrib();
+	static void attrib(unsigned int vao, unsigned int vbo);
 };
 
 template <typename V>

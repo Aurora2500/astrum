@@ -5,71 +5,77 @@
 namespace rendering
 {
 
-void Vertex2D::attrib()
+void Vertex2D::attrib(unsigned int vao, unsigned int vbo)
 {
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void *)offsetof(Vertex2D, position));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void *)offsetof(Vertex2D, tex_coords));
+	glEnableVertexArrayAttrib(vao, 0);
+	glEnableVertexArrayAttrib(vao, 1);
+	glVertexArrayAttribBinding(vao, 0, 0);
+	glVertexArrayAttribBinding(vao, 1, 0);
+	glVertexArrayAttribFormat(vao, 0, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, position));
+	glVertexArrayAttribFormat(vao, 1, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, tex_coords));
+	glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex2D));
 }
 
-void SimpleVertex::attrib()
+void SimpleVertex::attrib(unsigned int vao, unsigned int vbo)
 {
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SimpleVertex), (void *)offsetof(SimpleVertex, position));
+	glEnableVertexArrayAttrib(vao, 0);
+	glVertexArrayAttribBinding(vao, 0, 0);
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(SimpleVertex, position));
+	glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(SimpleVertex));
 }
 
-void UVNormalVertex::attrib()
+void UVNormalVertex::attrib(unsigned int vao, unsigned int vbo)
 {
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(UVNormalVertex), (void *)offsetof(UVNormalVertex, position));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(UVNormalVertex), (void *)offsetof(UVNormalVertex, normal));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(UVNormalVertex), (void *)offsetof(UVNormalVertex, tex_coords));
+	glEnableVertexArrayAttrib(vao, 0);
+	glEnableVertexArrayAttrib(vao, 1);
+	glEnableVertexArrayAttrib(vao, 2);
+	glVertexArrayAttribBinding(vao, 0, 0);
+	glVertexArrayAttribBinding(vao, 1, 0);
+	glVertexArrayAttribBinding(vao, 2, 0);
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(UVNormalVertex, position));
+	glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(UVNormalVertex, normal));
+	glVertexArrayAttribFormat(vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(UVNormalVertex, tex_coords));
+	glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(UVNormalVertex));
 }
 
-void FullVertex::attrib()
+void FullVertex::attrib(unsigned int vao, unsigned int vbo)
 {
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(FullVertex), (void *)offsetof(FullVertex, position));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(FullVertex), (void *)offsetof(FullVertex, normal));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(FullVertex), (void *)offsetof(FullVertex, tex_coords));
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(FullVertex), (void *)offsetof(FullVertex, tangent));
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(FullVertex), (void *)offsetof(FullVertex, bitangent));
+	for (int i = 0; i <= 4; i++)
+	{
+		glEnableVertexArrayAttrib(vao, i);
+		glVertexArrayAttribBinding(vao, i, 0);
+	}
+	glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(FullVertex, position));
+	glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(FullVertex, normal));
+	glVertexArrayAttribFormat(vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(FullVertex, tex_coords));
+	glVertexArrayAttribFormat(vao, 3, 3, GL_FLOAT, GL_FALSE, offsetof(FullVertex, tangent));
+	glVertexArrayAttribFormat(vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(FullVertex, bitangent));
+
+	glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(FullVertex));
+
 }
 
 template <typename V>
 void Mesh<V>::make_buffers()
 {
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glCreateVertexArrays(1, &VAO);
 
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(
-			GL_ARRAY_BUFFER,
+	glCreateBuffers(1, &VBO);
+	glNamedBufferData(
+			VBO,
 			vertices.size() * sizeof(V),
 			vertices.data(),
 			GL_STATIC_DRAW);
 
-	V::attrib();
+	V::attrib(VAO, VBO);
 
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(
-			GL_ELEMENT_ARRAY_BUFFER,
+	glCreateBuffers(1, &EBO);
+	glNamedBufferData(
+			EBO,
 			indices.size() * sizeof(unsigned int),
 			indices.data(),
 			GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glVertexArrayElementBuffer(VAO, EBO);
 }
 
 template <typename V>
