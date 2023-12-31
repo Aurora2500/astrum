@@ -2,3 +2,4 @@ Astrum.make
 bin
 obj
 Makefile
+.vscode

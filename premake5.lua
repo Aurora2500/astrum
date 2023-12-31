@@ -13,13 +13,14 @@ kind "WindowedApp"
 language "C++"
 cppdialect "C++20"
 toolset "clang"
+warnings "Extra"
 
 targetdir("bin/" .. outputdir)
 objdir("obj/" .. outputdir)
 
 files { "src/**.cpp", "src/**.hpp" }
-links { "SDL2", "GL", "GLEW" }
-includedirs { "src" }
+links { "SDL2", "GL", "GLEW", "freetype" }
+includedirs { "src", "/usr/include/freetype2" }
 
 filter "configurations:Debug"
 defines { "DEBUG" }
