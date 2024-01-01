@@ -34,6 +34,7 @@ void FrameBuffer::bind() const
 void FrameBuffer::bind_and_clear(GLbitfield bits) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_id);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(bits);
 	glEnable(GL_DEPTH_TEST);
 }

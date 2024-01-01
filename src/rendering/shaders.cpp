@@ -106,7 +106,8 @@ int Shader::get_location(const std::string &name)
 		m_uniforms[name] = loc;
 		return loc;
 	}
-	return m_uniforms[name];
+	int loc = m_uniforms[name];
+	return loc;
 }
 
 unsigned int Shader::id() const
@@ -137,6 +138,11 @@ void Shader::set_uniform(const std::string &name, glm::mat4 &value)
 void Shader::set_uniform(const std::string &name, glm::vec3 &value)
 {
 	glUniform3f(get_location(name), value.x, value.y, value.z);
+}
+
+void Shader::set_uniform(const std::string &name, glm::uvec2 &value)
+{
+	glUniform2ui(get_location(name), value.x, value.y);
 }
 
 }

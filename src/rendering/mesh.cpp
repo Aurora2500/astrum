@@ -136,6 +136,23 @@ FullMesh create_sphere(int rings, int sectors)
 	return mesh;
 }
 
+Mesh2D create_quad()
+{
+	Mesh2D mesh;
+	mesh.vertices = {
+		{{-1, -1}, {0, 0}},
+		{{-1, 1}, {0, 1}},
+		{{1, 1}, {1, 1}},
+		{{1, -1}, {1, 0}}
+	};
+	mesh.indices = {
+		0, 2, 1,
+		0, 3, 2
+	};
+	mesh.make_buffers();
+	return mesh;
+}
+
 template struct Mesh<Vertex2D>;
 template struct Mesh<SimpleVertex>;
 template struct Mesh<UVNormalVertex>;

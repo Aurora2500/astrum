@@ -27,7 +27,7 @@ public:
 	Texture(TextureSampling sampling = TextureSampling::Linear, TextureWrapping wrapping = TextureWrapping::Border, glm::vec3 &&col = glm::vec3(0.0f, 0.0f, 0.0f));
 	~Texture();
 
-	void bind() const;
+	void bind(int slot = 0) const;
 	void unbind() const;
 
 	void store(

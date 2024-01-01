@@ -22,6 +22,7 @@ public:
 
 	void bind() const;
 	void bind_and_clear(GLbitfield bits = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) const;
+	inline static void bind_default() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 	inline unsigned int id() const { return m_id; }
 };

@@ -60,4 +60,5 @@ using UVNormalMesh = Mesh<UVNormalVertex>;
 using FullMesh = Mesh<FullVertex>;
 
 FullMesh create_sphere(int rings, int sectors);
+Mesh2D create_quad();
 }
