@@ -17,7 +17,6 @@ class StarSystemRenderer
 {
 private:
 	const core::Star &m_star;
-	AssetManager &m_assets;
 	FullMesh m_sphere_mesh;
 	Mesh2D m_quad_mesh;
 
@@ -35,7 +34,7 @@ private:
 
 
 public:
-	StarSystemRenderer(AssetManager &assets, const core::Star &star);
+	StarSystemRenderer(const core::Star &star);
 
 	void draw(Camera const&cam);
 };

@@ -8,6 +8,8 @@
 #include "core/star.hpp"
 #include "core/planet.hpp"
 
+#include "util/locator.hpp"
+
 #include "camera.hpp"
 
 namespace rendering {
@@ -28,9 +30,8 @@ static glm::mat4 star_model(const core::Star &s)
 	return model;
 }
 
-StarSystemRenderer::StarSystemRenderer(AssetManager &assets, const core::Star &star)
+StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 	: m_star(star)
-	, m_assets(assets)
 	, m_sphere_mesh(rendering::create_sphere(90, 90))
 	, m_quad_mesh(create_quad())
 {
@@ -52,12 +53,14 @@ StarSystemRenderer::StarSystemRenderer(AssetManager &assets, const core::Star &s
 
 void StarSystemRenderer::draw(Camera const&cam)
 {
+	auto &assets = Locator::assets();
+
 	auto screen = glm::uvec2(1600, 900);
 	auto view = cam.get_view_matrix();
 
 	m_bloom_light_fbo.bind_and_clear();
-	auto &star_bloom_shader = m_assets.get_shader("star_bloom");
-	auto &planet_bloom_shader = m_assets.get_shader("planet_bloom");
+	auto &star_bloom_shader = assets.get_shader("star_bloom");
+	auto &planet_bloom_shader = assets.get_shader("planet_bloom");
 
 	star_bloom_shader.use();
 	{
@@ -80,8 +83,8 @@ void StarSystemRenderer::draw(Camera const&cam)
 
 	m_bloom_color_fbo.bind_and_clear();
 
-	auto &star_shader = m_assets.get_shader("star");
-	auto &planet_shader = m_assets.get_shader("rock_planet");
+	auto &star_shader = assets.get_shader("star");
+	auto &planet_shader = assets.get_shader("rock_planet");
 
 	star_shader.use();
 	star_shader.set_uniform("view", view);
@@ -107,7 +110,7 @@ void StarSystemRenderer::draw(Camera const&cam)
 		}
 	}
 
-	auto &blur = m_assets.get_shader("blur");
+	auto &blur = assets.get_shader("blur");
 
 	m_bloom_blur_fbo.bind_and_clear();
 	m_bloom_light_texture.bind(0);
@@ -131,7 +134,7 @@ void StarSystemRenderer::draw(Camera const&cam)
 
 	FrameBuffer::bind_default();
 
-	auto &add = m_assets.get_shader("add");
+	auto &add = assets.get_shader("add");
 	add.use();
 	m_bloom_color_texture.bind(1);
 	m_bloom_light_texture.bind(0);

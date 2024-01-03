@@ -20,17 +20,17 @@
 #include "rendering/render_buffer.hpp"
 
 #include "util/stopwatch.hpp"
+#include "util/locator.hpp"
 
 #include "core/star.hpp"
 #include "core/planet.hpp"
 
-Game::Game()
-{
-}
-
-void Game::run()
+void run_game()
 {
 	using namespace rendering;
+
+	auto assets = AssetManager();
+	Locator::provide(&assets);
 
 	Window window("Astrum");
 
@@ -55,7 +55,7 @@ void Game::run()
 		core::PlanetType::Continental,
 		30, glm::vec3(1.0f, 4.0f, -5.0f));
 
-	StarSystemRenderer renderer(m_assets, star);
+	StarSystemRenderer renderer(star);
 
 	cam.focus() = glm::vec3(0.0f, 0.0f, 10.0f);
 	

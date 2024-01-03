@@ -1,12 +1,3 @@
-#include "util/asset_manager.hpp"
+#pragma once
 
-class Game
-{
-private:
-	AssetManager m_assets;
-
-public:
-	Game();
-
-	void run();
-};
+void run_game();

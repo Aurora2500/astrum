@@ -3,7 +3,6 @@
 
 int main(void)
 {
-	Game game;
-	game.run();
+	run_game();
 	return 0;
 }
