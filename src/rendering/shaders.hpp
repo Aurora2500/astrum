@@ -18,8 +18,11 @@ private:
 	int get_location(const std::string &name);
 
 public:
-	Shader(std::ifstream &file);
+	Shader(const std::string&src);
 	~Shader();
+
+	Shader& operator=(Shader&) = delete;
+	Shader& operator=(Shader&&);
 
 	unsigned int id() const;
 	void use() const;
@@ -28,6 +31,7 @@ public:
 	void set_uniform(const std::string &name, float value);
 	void set_uniform(const std::string &name, glm::mat4 &value);
 	void set_uniform(const std::string &name, glm::vec3 &value);
+	void set_uniform(const std::string &name, const glm::vec2 &value);
 	void set_uniform(const std::string &name, glm::uvec2 &value);
 };
 

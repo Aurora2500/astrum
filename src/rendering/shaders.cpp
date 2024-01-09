@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -52,8 +53,9 @@ static unsigned int compile_program(const std::string &vertex_src, const std::st
 	return program;
 }
 
-Shader::Shader(std::ifstream &file)
+Shader::Shader(const std::string &src)
 {
+	std::stringstream file(src);
 	std::string line;
 	std::string vertex_src;
 	std::string fragment_src;
@@ -94,6 +96,17 @@ Shader::Shader(std::ifstream &file)
 Shader::~Shader()
 {
 	glDeleteProgram(m_id);
+}
+
+Shader &Shader::operator=(Shader &&other)
+{
+	if(this == &other)
+		return *this;
+	glDeleteProgram(m_id);
+	m_id = other.m_id;
+	m_uniforms = std::move(other.m_uniforms);
+	other.m_id = 0;
+	return *this;
 }
 
 int Shader::get_location(const std::string &name)
@@ -138,6 +151,11 @@ void Shader::set_uniform(const std::string &name, glm::mat4 &value)
 void Shader::set_uniform(const std::string &name, glm::vec3 &value)
 {
 	glUniform3f(get_location(name), value.x, value.y, value.z);
+}
+
+void Shader::set_uniform(const std::string &name, const glm::vec2 &value)
+{
+	glUniform2f(get_location(name), value.x, value.y);
 }
 
 void Shader::set_uniform(const std::string &name, glm::uvec2 &value)

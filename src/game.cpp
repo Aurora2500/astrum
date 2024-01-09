@@ -66,6 +66,7 @@ void run_game()
 			window.handle_events(event);
 			cam.update(event, mouse_down);
 		}
+		assets.poll();
 		window.clear();
 		renderer.draw(cam);
 		window.update();

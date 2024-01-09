@@ -5,6 +5,8 @@
 
 #include <glm/ext.hpp>
 
+#include <iostream>
+
 #include "core/star.hpp"
 #include "core/planet.hpp"
 
@@ -34,6 +36,8 @@ StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 	: m_star(star)
 	, m_sphere_mesh(rendering::create_sphere(90, 90))
 	, m_quad_mesh(create_quad())
+	, m_cube_mesh(create_skybox())
+	, m_star_texture(TextureSampling::Linear, TextureWrapping::Wrap)
 {
 	m_sphere_mesh.make_buffers();
 
@@ -49,14 +53,19 @@ StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 
 	m_bloom_blur_texture.store(1600, 900);
 	m_bloom_blur_fbo.attatch(m_bloom_blur_texture);
+
+	m_star_texture.load("milkyway");
 }
 
 void StarSystemRenderer::draw(Camera const&cam)
 {
+
 	auto &assets = Locator::assets();
 
 	auto screen = glm::uvec2(1600, 900);
 	auto view = cam.get_view_matrix();
+	auto cam_pos = cam.pos();
+
 
 	m_bloom_light_fbo.bind_and_clear();
 	auto &star_bloom_shader = assets.get_shader("star_bloom");
@@ -83,6 +92,16 @@ void StarSystemRenderer::draw(Camera const&cam)
 
 	m_bloom_color_fbo.bind_and_clear();
 
+	glDepthFunc(GL_LEQUAL);
+	auto &skybox = assets.get_shader("skybox");
+	auto skyview = cam.get_untranslated_view_matrix();
+	skybox.use();
+	m_star_texture.bind(0);
+	skybox.set_uniform("skybox", 0);
+	skybox.set_uniform("view", skyview);
+	m_cube_mesh.draw();
+	glDepthFunc(GL_LESS);
+
 	auto &star_shader = assets.get_shader("star");
 	auto &planet_shader = assets.get_shader("rock_planet");
 
@@ -94,7 +113,6 @@ void StarSystemRenderer::draw(Camera const&cam)
 		m_sphere_mesh.draw();
 	}
 
-	auto cam_pos = cam.pos();
 
 	planet_shader.use();
 	{
@@ -120,12 +138,9 @@ void StarSystemRenderer::draw(Camera const&cam)
 	blur.set_uniform("horizontal", true);
 
 	m_quad_mesh.draw();
-	// return;
 
 	m_bloom_light_fbo.bind_and_clear();
-	// auto &redraw = m_assets.get_shader("redraw");
 	m_bloom_blur_texture.bind(0);
-	// redraw.use();
 	blur.use();
 	blur.set_uniform("tex", 0);
 	blur.set_uniform("sc_size", screen);
@@ -136,8 +151,8 @@ void StarSystemRenderer::draw(Camera const&cam)
 
 	auto &add = assets.get_shader("add");
 	add.use();
-	m_bloom_color_texture.bind(1);
-	m_bloom_light_texture.bind(0);
+	m_bloom_color_texture.bind(0);
+	m_bloom_light_texture.bind(1);
 	add.set_uniform("tex", 0);
 	add.set_uniform("light", 1);
 	m_quad_mesh.draw();

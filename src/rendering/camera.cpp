@@ -64,6 +64,15 @@ glm::mat4 Camera::get_view_matrix() const
 	return projection * view;
 }
 
+glm::mat4 Camera::get_untranslated_view_matrix() const
+{
+	glm::mat4 view(1.0f);
+	view = glm::rotate(view, m_pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+	view = glm::rotate(view, m_yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 projection = glm::perspective(glm::radians(2.5f*m_fov), m_aspect, m_near, m_far);
+	return projection * view;
+}
+
 glm::vec3 Camera::pos() const
 {
 	return m_pos + glm::vec3(

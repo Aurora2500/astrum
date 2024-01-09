@@ -19,6 +19,7 @@ private:
 	const core::Star &m_star;
 	FullMesh m_sphere_mesh;
 	Mesh2D m_quad_mesh;
+	SimpleMesh m_cube_mesh;
 
 	FrameBuffer m_bloom_color_fbo;
 	RenderBuffer m_bloom_color_rbo;
@@ -31,6 +32,7 @@ private:
 	FrameBuffer m_bloom_blur_fbo;
 	Texture m_bloom_blur_texture;
 
+	Cubemap m_star_texture;
 
 
 public:

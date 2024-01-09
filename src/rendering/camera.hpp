@@ -21,11 +21,17 @@ public:
 	void update(SDL_Event &event, bool &mouse_down);
 
 	glm::mat4 get_view_matrix() const;
+	glm::mat4 get_untranslated_view_matrix() const;
 
 	inline float &yaw() { return m_yaw; }
+	inline const float &yaw() const { return m_yaw; }
 	inline float &pitch() { return m_pitch; }
+	inline const float &pitch() const { return m_pitch; }
 	inline float &distance() { return m_distance; }
+	inline float &fov() { return m_fov; }
+	inline const float &fov() const { return m_fov; }
 	inline float &aspect() { return m_aspect; }
+	inline const float &aspect() const { return m_aspect; }
 	inline glm::vec3 &focus() { return m_pos; }
 	inline const glm::vec3 &focus() const { return m_pos; }
 	glm::vec3 pos() const;
