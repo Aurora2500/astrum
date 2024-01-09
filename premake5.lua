@@ -15,7 +15,7 @@ cppdialect "C++20"
 toolset "clang"
 warnings "Extra"
 
-targetdir("bin/" .. outputdir)
+targetdir(".")
 objdir("obj/" .. outputdir)
 
 files { "src/**.cpp", "src/**.hpp" }
@@ -35,7 +35,7 @@ newaction {
     description = "clean the project",
     execute     = function()
         print("clean the build...")
-        os.rmdir("./bin")
+        os.remove("./Astrum")
         os.rmdir("./obj")
         os.remove("./Makefile")
         os.remove("./Astrum.make")
