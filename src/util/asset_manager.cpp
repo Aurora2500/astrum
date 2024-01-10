@@ -52,6 +52,18 @@ rendering::Shader &AssetManager::get_shader(const std::string &name)
 	return *m_shaders[name];
 }
 
+FontFace &AssetManager::get_font(const std::string &name)
+{
+	auto it = m_fonts.find(name);
+	if (it != m_fonts.end())
+	{
+		return *it->second;
+	}
+	std::string path = m_base_path + "assets/fonts/" + name + ".ttf";
+	m_fonts.insert({name, std::make_unique<FontFace>(m_text.load_font(path))});
+	return *m_fonts[name];
+}
+
 std::vector<uint8_t> AssetManager::load_image(const std::string &path, int &width, int &height, int &channels, bool flip)
 {
 	std::string full_path = m_base_path + "assets/textures/" + path;

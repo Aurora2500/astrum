@@ -16,12 +16,14 @@ private:
 	FileWatcher m_shader_watcher;
 
 	Text m_text;
+	std::unordered_map<std::string, std::unique_ptr<FontFace>> m_fonts;
 	
 
 public:
 	AssetManager();
 
 	rendering::Shader &get_shader(const std::string &name);
+	FontFace &get_font(const std::string &name);
 	
 	std::vector<uint8_t> load_image(const std::string &path, int &width, int &height, int &channels, bool flip = true);
 	void poll();
