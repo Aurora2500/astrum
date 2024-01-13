@@ -5,6 +5,8 @@
 #include "frame_buffer.hpp"
 #include "render_buffer.hpp"
 
+#include "text.hpp"
+
 #include "core/star.hpp"
 #include "core/planet.hpp"
 
@@ -34,6 +36,7 @@ private:
 
 	Cubemap m_star_texture;
 
+	TextAtlas m_text_atlas;
 
 public:
 	StarSystemRenderer(const core::Star &star);

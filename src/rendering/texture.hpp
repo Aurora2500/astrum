@@ -38,6 +38,10 @@ public:
 			unsigned int height);
 
 	void load(const std::string &path);
+	void load_memory(
+			unsigned int width,
+			unsigned int height,
+			unsigned char *data);
 
 	inline unsigned int id() const { return m_id; }
 

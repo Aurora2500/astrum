@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <glm/glm.hpp>
+
 class FontFace;
 
 class Text
@@ -17,6 +19,14 @@ public:
 	FontFace load_font(const std::string &path);
 };
 
+struct BitMap
+{
+	unsigned char *buffer;
+	glm::uvec2 size;
+	glm::ivec2 bearing;
+	int advance;
+};
+
 class FontFace
 {
 private:
@@ -26,8 +36,10 @@ private:
 public:
 	~FontFace();
 
-	void set_size(int size);
+	FontFace& operator=(FontFace &&other);
+	FontFace(FontFace &&other);
 
+	BitMap load_char(char c, int flags);
 
 	friend class Text;
 };

@@ -23,6 +23,7 @@ Window::Window(const char *title) : m_is_fullscreen(false), m_running(true), m_w
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE);
 	SDL_GL_SetSwapInterval(0);
 

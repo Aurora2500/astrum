@@ -112,6 +112,32 @@ void Texture::load(const std::string &path) {
 	m_height = height;
 }
 
+void Texture::load_memory(
+		unsigned int width,
+		unsigned int height,
+		unsigned char *data)
+{
+	glTextureStorage2D(
+			m_id,
+			1,
+			GL_R8,
+			width,
+			height);
+	glTextureSubImage2D(
+		m_id,
+		0,
+		0,
+		0,
+		width,
+		height,
+		GL_RED,
+		GL_UNSIGNED_BYTE,
+		data
+	);
+	m_width = width;
+	m_height = height;
+}
+
 Cubemap::Cubemap(TextureSampling sampling, TextureWrapping wrapping)
 	: m_sampling(TextureSampling::Linear), m_wrapping(TextureWrapping::Border)
 {

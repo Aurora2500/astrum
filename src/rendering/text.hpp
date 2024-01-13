@@ -12,6 +12,7 @@ namespace rendering
 
 struct Glyph
 {
+	glm::uvec2 pos;
 	glm::uvec2 size;
 	glm::uvec2 bearing;
 	int advance;
@@ -22,6 +23,7 @@ class TextAtlas
 {
 private:
 	Texture m_texture;
+	unsigned int m_width, m_height;
 	std::unordered_map<char, Glyph> m_glyphs;
 
 public:
@@ -29,7 +31,9 @@ public:
 
 	void load();
 
-	void draw_text(std::string const&text, float x, float y, float scale, glm::vec3 const&color);
+	inline Texture& texture() { return m_texture; }
+	
+	void draw_text(std::string const&text, float x, float y, float scale);
 };
 
 }

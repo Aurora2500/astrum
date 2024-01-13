@@ -55,6 +55,7 @@ StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 	m_bloom_blur_fbo.attatch(m_bloom_blur_texture);
 
 	m_star_texture.load("milkyway");
+	m_text_atlas.load();
 }
 
 void StarSystemRenderer::draw(Camera const&cam)
@@ -156,5 +157,19 @@ void StarSystemRenderer::draw(Camera const&cam)
 	add.set_uniform("tex", 0);
 	add.set_uniform("light", 1);
 	m_quad_mesh.draw();
+
+	auto &text_shader = assets.get_shader("text");
+	auto text_proj = glm::ortho(0.0f, (float)screen.x, 0.0f, (float)screen.y);
+
+	text_shader.use();
+	text_shader.set_uniform("projection", text_proj);
+
+	m_text_atlas.texture().bind(0);
+	text_shader.set_uniform("atlas", 0);
+
+	glDepthFunc(GL_ALWAYS);
+	text_shader.set_uniform("col", glm::vec3(1.0f, 1.0f, 1.0f));
+	m_text_atlas.draw_text("Hello, world!", 200.0, 500.0, 1.0f);
+	glDepthFunc(GL_LESS);
 }
 }
