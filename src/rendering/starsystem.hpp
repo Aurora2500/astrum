@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "mesh.hpp"
 #include "camera.hpp"
 #include "frame_buffer.hpp"
@@ -34,7 +36,7 @@ private:
 	FrameBuffer m_bloom_blur_fbo;
 	Texture m_bloom_blur_texture;
 
-	Cubemap m_star_texture;
+	std::shared_ptr<Cubemap> m_star_texture;
 
 	TextAtlas m_text_atlas;
 

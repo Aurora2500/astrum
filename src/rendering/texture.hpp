@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <span>
+#include <vector>
+#include <memory>
 
 #include <glm/glm.hpp>
 
@@ -47,6 +50,13 @@ public:
 
 };
 
+
+struct FaceData
+{
+	std::vector<unsigned char> data;
+	unsigned int width, height, channels;
+};
+
 class Cubemap
 {
 private:
@@ -61,7 +71,7 @@ public:
 	void bind(int slot = 0) const;
 	void unbind() const;
 
-	void load(const std::string &path);
+	void load(std::span<FaceData> faces);
 
 	inline unsigned int id() const { return m_id; }
 

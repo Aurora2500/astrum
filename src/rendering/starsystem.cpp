@@ -37,8 +37,9 @@ StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 	, m_sphere_mesh(rendering::create_sphere(90, 90))
 	, m_quad_mesh(create_quad())
 	, m_cube_mesh(create_skybox())
-	, m_star_texture(TextureSampling::Linear, TextureWrapping::Wrap)
+	// , m_star_texture(TextureSampling::Linear, TextureWrapping::Wrap)
 {
+	auto &assets = Locator::assets();
 	m_sphere_mesh.make_buffers();
 
 	m_bloom_color_texture.store(1600, 900);
@@ -54,7 +55,7 @@ StarSystemRenderer::StarSystemRenderer(const core::Star &star)
 	m_bloom_blur_texture.store(1600, 900);
 	m_bloom_blur_fbo.attatch(m_bloom_blur_texture);
 
-	m_star_texture.load("milkyway");
+	m_star_texture = assets.get_cubemap("milkyway");
 	m_text_atlas.load();
 }
 
@@ -97,7 +98,7 @@ void StarSystemRenderer::draw(Camera const&cam)
 	auto &skybox = assets.get_shader("skybox");
 	auto skyview = cam.get_untranslated_view_matrix();
 	skybox.use();
-	m_star_texture.bind(0);
+	m_star_texture->bind(0);
 	skybox.set_uniform("skybox", 0);
 	skybox.set_uniform("view", skyview);
 	m_cube_mesh.draw();

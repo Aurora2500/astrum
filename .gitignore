@@ -4,3 +4,5 @@ bin
 obj
 Makefile
 .vscode
+*.tar
+*.tar.gz

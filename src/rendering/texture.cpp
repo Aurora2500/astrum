@@ -88,8 +88,8 @@ void Texture::store(
 
 void Texture::load(const std::string &path) {
 	auto &asset_manager = Locator::assets();
-	int width, height, channels;
-	auto data = asset_manager.load_image(path, width, height, channels);
+	unsigned int width, height, channels = 4;
+	auto data = asset_manager.load_image(path, width, height);
 	std::cout << width << " width " << height << " height " << channels << " channels" << std::endl;
 	glTextureStorage2D(
 			m_id,
@@ -169,33 +169,22 @@ void Cubemap::unbind() const
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void Cubemap::load(const std::string &path)
+void Cubemap::load(std::span<FaceData> fd)
 {
-	auto &asset = Locator::assets();
-	std::array<std::string, 6> faces = {
-		"px.png",
-		"nx.png",
-		"py.png",
-		"ny.png",
-		"pz.png",
-		"nz.png",
-	};
-
 	for (int i = 0; i < 6; i++)
 	{
-		int width, height, channels;
-		auto data = asset.load_image(path + "_" + faces[i], width, height, channels, false);
+		auto &face = fd[i];
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
 		glTexImage2D(
 				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 				0,
 				GL_RGB,
-				width,
-				height,
+				face.width,
+				face.height,
 				0,
-				channels == 4 ? GL_RGBA : GL_RGB,
+				face.channels == 4 ? GL_RGBA : GL_RGB,
 				GL_UNSIGNED_BYTE,
-				data.data());
+				face.data.data());
 	}
 }
 

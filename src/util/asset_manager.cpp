@@ -1,18 +1,21 @@
+#include "asset_manager.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <thread>
 
 #include <SDL2/SDL.h>
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#include <lodepng.h>
 
-#include "asset_manager.hpp"
+#include "rendering/texture.hpp"
 
 AssetManager::AssetManager()
 {
-	// char *base = SDL_GetBasePath();
-	m_base_path = "./";
-	// SDL_free(base);
+	char *base = SDL_GetBasePath();
+	m_base_path = base;
+	SDL_free(base);
 	m_shader_watcher.set_callback([this](std::string const &filename) {
 		if (!filename.ends_with(".glsl"))
 			return;
@@ -64,20 +67,50 @@ FontFace &AssetManager::get_font(const std::string &name)
 	return *m_fonts[name];
 }
 
-std::vector<uint8_t> AssetManager::load_image(const std::string &path, int &width, int &height, int &channels, bool flip)
+std::vector<uint8_t> AssetManager::load_image(const std::string &path, unsigned int &width, unsigned int &height)
 {
 	std::string full_path = m_base_path + "assets/textures/" + path;
 	std::cout << "Loading image: " << full_path << std::endl;
-	stbi_set_flip_vertically_on_load(flip);
-	stbi_uc *data = stbi_load(full_path.c_str(), &width, &height, &channels, 0);
-	if (!data)
-	{
-		std::cerr << "Failed to load image: " << full_path << std::endl;
-		return {};
-	}
-	std::vector<uint8_t> image_data(data, data + width * height * channels);
-	stbi_image_free(data);
+	std::vector<uint8_t> image_data;
+	lodepng::decode(image_data, width, height, full_path, LCT_RGB);
+	
 	return image_data;
+}
+
+std::shared_ptr<rendering::Cubemap> AssetManager::get_cubemap(const std::string &name)
+{
+	auto it = m_cubemaps.find(name);
+	if (it != m_cubemaps.end())
+	{
+		return it->second;
+	}
+
+	std::array<std::string, 6> faces = {
+		"px.png",
+		"nx.png",
+		"py.png",
+		"ny.png",
+		"pz.png",
+		"nz.png",
+	};
+	std::array<rendering::FaceData, 6> face_data;
+	std::array<std::thread, 6> threads;
+	for (int i = 0; i < 6; i++)
+	{
+		auto full_name = name + + "_" + faces[i];
+		auto data = &face_data[i];
+		threads[i] = std::thread([this, data, full_name]() {
+			data->channels = 3;
+			data->data = load_image(full_name, data->width, data->height);
+		});
+	}
+	for (auto &t: threads)
+		t.join();
+
+	auto cubemap = std::make_shared<rendering::Cubemap>();
+	cubemap->load(face_data);
+	m_cubemaps.insert({name, cubemap});
+	return cubemap;
 }
 
 void AssetManager::poll()

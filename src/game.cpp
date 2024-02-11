@@ -25,6 +25,8 @@
 #include "core/star.hpp"
 #include "core/planet.hpp"
 
+#include "appstate.hpp"
+
 void run_game()
 {
 	using namespace rendering;
@@ -33,6 +35,8 @@ void run_game()
 	Locator::provide(&assets);
 
 	Window window("Astrum");
+
+	AppStateManager appstate = AppStateManager();
 
 	int n;
 	glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &n);
@@ -67,8 +71,12 @@ void run_game()
 			cam.update(event, mouse_down);
 		}
 		assets.poll();
+
 		window.clear();
 		renderer.draw(cam);
+		bool should_continue = appstate.update();
 		window.update();
+
+		if (!should_continue) break;
 	}
 }
