@@ -12,7 +12,7 @@ void EventManager::poll()
 		if (event.type == SDL_KEYDOWN)
 		{
 			event.key.keysym.sym;
-			 m_events.push_back(Event{
+			m_events.push_back(Event{
 				EventKind::KeyDown,
 				{event.key.keysym.sym}
 			});
