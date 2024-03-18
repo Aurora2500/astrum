@@ -9,6 +9,7 @@
 
 #include "game.hpp"
 #include "windowing/window.hpp"
+#include "windowing/events.hpp"
 
 #include "rendering/camera.hpp"
 #include "rendering/mesh.hpp"
@@ -35,45 +36,18 @@ void run_game()
 	Locator::provide(&assets);
 
 	Window window("Astrum");
+	EventManager event_manager;
 
 	AppStateManager appstate = AppStateManager();
 
-	int n;
-	glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &n);
-	std::cout << "Max uniform size: " << n << std::endl;
-
-	SDL_Event event;
-
 	Camera cam(window.aspect());
-	bool mouse_down = false;
-
-	core::Star star(core::StarType::YellowDwarf, 420, 2.0, glm::vec3(0.0f));
-
-	star.planets().emplace_back(
-		core::PlanetType::Continental,
-		30, glm::vec3(0.0f, 0.0f, 10.0f));
-	star.planets().emplace_back(
-		core::PlanetType::Continental,
-		30, glm::vec3(7.0f, -3.0f, 2.0f));
-	star.planets().emplace_back(
-		core::PlanetType::Continental,
-		30, glm::vec3(1.0f, 4.0f, -5.0f));
-
-	StarSystemRenderer renderer(star);
-
-	cam.focus() = glm::vec3(0.0f, 0.0f, 10.0f);
 	
 	while (window.running())
 	{
-		while (SDL_PollEvent(&event))
-		{
-			window.handle_events(event);
-			cam.update(event, mouse_down);
-		}
+		event_manager.poll();
 		assets.poll();
-
 		window.clear();
-		renderer.draw(cam);
+
 		bool should_continue = appstate.update();
 		window.update();
 

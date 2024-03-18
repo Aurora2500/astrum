@@ -27,6 +27,5 @@ out vec4 color;
 void main()
 {
 	float shape = texture(atlas, uv).r;
-	vec3 c = mix(vec3(1.0, 0.0, 0.0), col, shape);
 	color = vec4(col, shape);
 }

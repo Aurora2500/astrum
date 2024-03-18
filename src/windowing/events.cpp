@@ -2,27 +2,54 @@
 
 #include <SDL2/SDL.h>
 
+static bool to_event(SDL_Event event, Event &out)
+{
+	switch (event.type)
+	{
+	case SDL_KEYDOWN:
+		out.kind = EventKind::Keyboard;
+		out.keyboard.key = static_cast<Key>(event.key.keysym.sym);
+		out.keyboard.down = true;
+		break;
+	case SDL_KEYUP:
+		out.kind = EventKind::Keyboard;
+		out.keyboard.key = static_cast<Key>(event.key.keysym.sym);
+		out.keyboard.down = true;
+	case SDL_MOUSEBUTTONDOWN:
+		out.kind = EventKind::MouseButton;
+		out.mouse.button = static_cast<MouseButton>(event.button.button);
+		out.mouse.pos.x = event.button.x;
+		out.mouse.pos.y = event.button.y;
+		break;
+	case SDL_MOUSEBUTTONUP:
+		out.kind = EventKind::MouseButton;
+		out.mouse.button = static_cast<MouseButton>(event.button.button);
+		out.mouse.pos.x = event.button.x;
+		out.mouse.pos.y = event.button.y;
+		break;
+	case SDL_MOUSEMOTION:
+		out.kind = EventKind::MouseMotion;
+		out.motion.rel.x = event.motion.xrel;
+		out.motion.rel.y = event.motion.yrel;
+		break;
+	default:
+		return false;
+	}
+	return true;
+}
+
 void EventManager::poll()
 {
 	m_events.clear();
+	m_flags = 0;
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
-		//get key
-		if (event.type == SDL_KEYDOWN)
+		Event e;
+		if (to_event(event, e))
 		{
-			event.key.keysym.sym;
-			m_events.push_back(Event{
-				EventKind::KeyDown,
-				{event.key.keysym.sym}
-			});
-		}
-		else if (event.type == SDL_KEYUP)
-		{
-			m_events.push_back(Event{
-				EventKind::KeyUp,
-				{event.key.keysym.sym}
-			});
+			m_flags |= static_cast<u_int32_t>(e.kind);
+			m_events.push_back(e);
 		}
 	}
 }

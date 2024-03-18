@@ -45,4 +45,5 @@ enum class Key : int {
 	Shift = SDLK_LSHIFT,
 	Control = SDLK_LCTRL,
 	Alt = SDLK_LALT,
+	Esc = SDLK_ESCAPE,
 };

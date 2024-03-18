@@ -2,24 +2,57 @@
 
 #include <vector>
 
-enum class EventKind
+#include "key.hpp"
+
+enum class EventKind: u_int32_t
 {
-	KeyDown,
-	KeyUp,
-	MouseDown,
-	MouseUp,
+	None = 0,
+	Keyboard = 1 << 0,
+	MouseButton = 1 << 1,
+	MouseMotion = 1 << 2,
 };
 
-struct KeyDownEvent
-{
-	EventKind kind;
-	int key;
+EventKind operator|(EventKind const& lhs, EventKind const& rhs);
+EventKind operator&(EventKind const& lhs, EventKind const& rhs);
+EventKind operator^(EventKind const& lhs, EventKind const& rhs);
+EventKind operator~(EventKind const& op);
+EventKind& operator|=(EventKind& lhs, EventKind const& rhs);
+EventKind& operator&=(EventKind& lhs, EventKind const& rhs);
+EventKind& operator^=(EventKind& lhs, EventKind const& rhs);
+
+void foo() {
+	EventKind kind = EventKind::Keyboard | EventKind::MouseButton;
+	kind |= EventKind::MouseMotion;
+
+	if (kind != EventKind::None) {
+		// do something
+	}
+}
+
+enum class MouseButton {
+	Left = SDL_BUTTON_LEFT,
+	Middle = SDL_BUTTON_MIDDLE,
+	Right = SDL_BUTTON_RIGHT,
 };
 
-struct KeyUpEvent
+struct Position {
+	int x;
+	int y;
+};
+
+struct MouseEvent {
+	MouseButton button;
+	Position pos;
+};
+
+struct MotionEvent {
+	Position rel;
+};
+
+struct KeyboardEvent
 {
-	EventKind kind;
-	int key;
+	Key key;
+	bool down;
 };
 
 struct Event
@@ -27,26 +60,20 @@ struct Event
 	EventKind kind;
 	union
 	{
-		KeyDownEvent key_down;
-		KeyUpEvent key_up;
+		MouseEvent mouse;
+		MotionEvent motion;
+		KeyboardEvent keyboard;
 	};
-};
-
-
-struct MouseState
-{
-	bool down;
-
 };
 
 class EventManager
 {
 private:
 	std::vector<Event> m_events;
+	u_int32_t m_flags;
 
 public:
 	EventManager() = default;
 
 	void poll();
-	
 };
