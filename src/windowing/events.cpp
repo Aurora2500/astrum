@@ -53,3 +53,41 @@ void EventManager::poll()
 		}
 	}
 }
+
+EventKind operator|(EventKind const& lhs, EventKind const& rhs)
+{
+	return static_cast<EventKind>(static_cast<u_int32_t>(lhs) | static_cast<u_int32_t>(rhs));
+}
+
+EventKind operator&(EventKind const& lhs, EventKind const& rhs)
+{
+	return static_cast<EventKind>(static_cast<u_int32_t>(lhs) & static_cast<u_int32_t>(rhs));
+}
+
+EventKind operator^(EventKind const& lhs, EventKind const& rhs)
+{
+	return static_cast<EventKind>(static_cast<u_int32_t>(lhs) ^ static_cast<u_int32_t>(rhs));
+}
+
+EventKind operator~(EventKind const& op)
+{
+	return static_cast<EventKind>(~static_cast<u_int32_t>(op));
+}
+
+EventKind& operator|=(EventKind& lhs, EventKind const& rhs)
+{
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+EventKind& operator&=(EventKind& lhs, EventKind const& rhs)
+{
+	lhs = lhs & rhs;
+	return lhs;
+}
+
+EventKind& operator^=(EventKind& lhs, EventKind const& rhs)
+{
+	lhs = lhs ^ rhs;
+	return lhs;
+}

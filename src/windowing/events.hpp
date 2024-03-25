@@ -20,15 +20,6 @@ EventKind& operator|=(EventKind& lhs, EventKind const& rhs);
 EventKind& operator&=(EventKind& lhs, EventKind const& rhs);
 EventKind& operator^=(EventKind& lhs, EventKind const& rhs);
 
-void foo() {
-	EventKind kind = EventKind::Keyboard | EventKind::MouseButton;
-	kind |= EventKind::MouseMotion;
-
-	if (kind != EventKind::None) {
-		// do something
-	}
-}
-
 enum class MouseButton {
 	Left = SDL_BUTTON_LEFT,
 	Middle = SDL_BUTTON_MIDDLE,
