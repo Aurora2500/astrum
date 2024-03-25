@@ -32,6 +32,9 @@ static bool to_event(SDL_Event event, Event &out)
 		out.motion.rel.x = event.motion.xrel;
 		out.motion.rel.y = event.motion.yrel;
 		break;
+	case SDL_QUIT:
+		out.kind = EventKind::Quit;
+		break;
 	default:
 		return false;
 	}
@@ -52,6 +55,11 @@ void EventManager::poll()
 			m_events.push_back(e);
 		}
 	}
+}
+
+bool EventManager::test_flag(EventKind kind) const
+{
+	return (m_flags & static_cast<u_int32_t>(kind)) != 0;
 }
 
 EventKind operator|(EventKind const& lhs, EventKind const& rhs)

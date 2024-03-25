@@ -48,6 +48,8 @@ void run_game()
 		assets.poll();
 		window.clear();
 
+		if (event_manager.test_flag(EventKind::Quit)) break;
+
 		bool should_continue = appstate.update();
 		window.update();
 

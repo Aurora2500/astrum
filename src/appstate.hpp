@@ -50,36 +50,3 @@ public:
 
 	bool update();
 };
-
-class LoadingState : public AppState
-{
-private:
-	std::atomic<bool> m_done;
-	std::thread m_loader;
-
-public:
-	LoadingState();
-	~LoadingState();
-
-	AppStateChange update() override;	
-};
-
-class MenuState : public AppState
-{
-
-public:
-	MenuState();
-	~MenuState();
-
-	AppStateChange update() override;
-};
-
-class GameState : public AppState
-{
-
-public:
-	GameState();
-	~GameState();
-
-	AppStateChange update() override;
-};

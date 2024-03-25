@@ -1,4 +1,7 @@
 #include "appstate.hpp"
+#include "appstate/loadstate.hpp"
+
+#include <iostream>
 
 #include "util/locator.hpp"
 
@@ -46,12 +49,15 @@ bool AppStateManager::update()
 	case AppStateChangeType::Nop:
 		break;
 	case AppStateChangeType::Push:
+		std::cout << "Pushing new state" << std::endl;
 		m_stack.push_back(std::move(change.m_next));
 		break;
 	case AppStateChangeType::Pop:
+		std::cout << "Popping state" << std::endl;
 		m_stack.pop_back();
 		break;
 	case AppStateChangeType::Swap:
+		std::cout << "Swapping state" << std::endl;
 		m_stack.pop_back();
 		m_stack.push_back(std::move(change.m_next));
 		break;
@@ -59,56 +65,3 @@ bool AppStateManager::update()
 
 	return true;
 };
-
-static void load_assets(std::atomic<bool> &done)
-{
-	// auto &assets = Locator::assets();
-	done.store(true, std::memory_order_release);
-}
-
-LoadingState::LoadingState()
-	: m_done(false)
-{
-	m_loader = std::thread(load_assets, std::ref(m_done));
-}
-
-LoadingState::~LoadingState()
-{
-}
-
-AppStateChange LoadingState::update()
-{
-	if (m_done.load(std::memory_order_acquire))
-	{
-		m_loader.join();
-		return AppStateChange::swap(new MenuState());
-	}
-	return AppStateChange::nop();
-}
-
-MenuState::MenuState()
-{
-}
-
-MenuState::~MenuState()
-{
-}
-
-AppStateChange MenuState::update()
-{
-	return AppStateChange::nop();
-}
-
-GameState::GameState()
-{
-}
-
-GameState::~GameState()
-{
-}
-
-AppStateChange GameState::update()
-{
-	return AppStateChange::nop();
-}
-

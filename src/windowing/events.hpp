@@ -10,6 +10,7 @@ enum class EventKind: u_int32_t
 	Keyboard = 1 << 0,
 	MouseButton = 1 << 1,
 	MouseMotion = 1 << 2,
+	Quit = 1 << 5,
 };
 
 EventKind operator|(EventKind const& lhs, EventKind const& rhs);
@@ -67,4 +68,6 @@ public:
 	EventManager() = default;
 
 	void poll();
+
+	bool test_flag(EventKind kind) const;
 };
