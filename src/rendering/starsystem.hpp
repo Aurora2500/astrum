@@ -2,12 +2,12 @@
 
 #include <memory>
 
-#include "mesh.hpp"
+#include "primitive/mesh.hpp"
 #include "camera.hpp"
-#include "frame_buffer.hpp"
-#include "render_buffer.hpp"
+#include "primitive/frame_buffer.hpp"
+#include "primitive/render_buffer.hpp"
 
-#include "text.hpp"
+#include "primitive/text.hpp"
 
 #include "core/star.hpp"
 #include "core/planet.hpp"

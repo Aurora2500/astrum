@@ -12,13 +12,13 @@
 #include "windowing/events.hpp"
 
 #include "rendering/camera.hpp"
-#include "rendering/mesh.hpp"
+#include "rendering/primitive/mesh.hpp"
 
 #include "rendering/starsystem.hpp"
 
-#include "rendering/frame_buffer.hpp"
-#include "rendering/texture.hpp"
-#include "rendering/render_buffer.hpp"
+#include "rendering/primitive/frame_buffer.hpp"
+#include "rendering/primitive/texture.hpp"
+#include "rendering/primitive/render_buffer.hpp"
 
 #include "util/stopwatch.hpp"
 #include "util/locator.hpp"

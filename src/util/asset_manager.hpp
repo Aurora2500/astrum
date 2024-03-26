@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "file_watch.hpp"
-#include "rendering/shaders.hpp"
+#include "rendering/primitive/shaders.hpp"
 #include "text.hpp"
-#include "rendering/texture.hpp"
+#include "rendering/primitive/texture.hpp"
 
 class AssetManager
 {

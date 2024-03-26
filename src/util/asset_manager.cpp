@@ -9,7 +9,7 @@
 #include <stb/stb_image.h>
 #include <lodepng.h>
 
-#include "rendering/texture.hpp"
+#include "rendering/primitive/texture.hpp"
 
 AssetManager::AssetManager()
 {
